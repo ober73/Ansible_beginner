@@ -1,0 +1,25 @@
+https://geekflare.com/connecting-windows-ansible-from-ubuntu/
+
+https://srinirallabandi.medium.com/setting-up-windows-host-using-ansible-6cd696135fe7
+
+pip install pywinrm in your Terminal.
+
+ansible_connection=winrm
+
+[win]
+172.16.2.5 
+172.16.2.6 
+
+[win:vars]
+ansible_user=vagrant
+ansible_password=password
+ansible_connection=winrm
+ansible_winrm_server_cert_validation=ignore
+
+Test Connection
+Let’s check to see if everything is working. To do this, go to your control node’s terminal and type ansible [host_group_name_in_inventory_file] -i hosts -m win_ping. Your output should look like this:
+
+
+sudo apt-get install python3-winrm
+
+
