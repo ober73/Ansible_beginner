@@ -1,3 +1,119 @@
 Ansible Beginners
 
+Ansible Inventory
+
+ssh or powershell remoting (windows)
+
+agentless
+
+
+you can use aliases
+
+web ansible_host=server1.company.com ansible_connetion=ssh ansible_user=root
+
+or localhost
+
+or winrm 
+
+setup ssh key 
+
+
+ANSIBLE PLAYBOOKS
+
+each play is a dictionary
+
+name:
+hosts:
+tasks:
+
+tasks are an array or list so you can not move around
+
+host in playbook must be matched in the inventory
+
+the task are modules
+
+
+LAB
+
+User: bob
+Password: caleston123
+
+
+ANSIBLE MODULES
+
+script module ansible has the script locally and can run remote, no need to copy it over to other servers
+
+service: name=postgresql state=started
+
+lininfile is used to find a line in a file and replace it or add it if it is not there
+
+free_form parameter
+
+ansible-doc to see info about modules
+
+The following two statements are true about the lineinfile Ansible module.
+
+
+A. It only adds the given line in file if that line doesn't exist in that file.
+
+D. It keeps the existing lines as well and add a new given line in the file.
+
+
+
+Example inlinefile
+
+---
+- name: 'hosts'
+  hosts: all
+  become: yes
+  tasks:
+    - name: 'Execute a script'
+      script: '/tmp/install_script.sh'    
+    - name: 'Start httpd service'
+      service:
+        name: 'httpd'
+        state: 'started'
+    - name: 'Add line to file'
+      lineinfile: 
+        path: /var/www/html/index.html
+        line: "Welcome to ansible-beginning course"
+        create: true
+        
+        
+EXAMPLE create new user:
+
+---
+- name: 'hosts'
+  hosts: all
+  become: yes
+  tasks:
+    - name: 'Execute a script'
+      script: '/tmp/install_script.sh'
+    - name: 'Start httpd service'
+      service:
+        name: 'httpd'
+        state: 'started'
+    - name: "Update /var/www/html/index.html"
+      lineinfile:
+        path: /var/www/html/index.html
+        line: "Welcome to ansible-beginning course"
+        create: true
+    - name: 'Add new user'
+      user: 
+        name: 'web_user'
+        uid: 1040
+        group: 'developers'
+        
+        
+VARIABLES
+
+to use a variable enclose in curly brackets 
+'nameserver {{ dns_server }}'
+
+
+you can put variables into a file using Jinja2 Templating
+
+{{   }}
+
+
 
