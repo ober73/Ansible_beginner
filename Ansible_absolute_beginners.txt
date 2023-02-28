@@ -115,5 +115,127 @@ you can put variables into a file using Jinja2 Templating
 
 {{   }}
 
+CONDITIONALS, LOOPS & ROLES
+
+Ansible Conditionals
+
+conditional statements help when for example installing a package on all systems i.e. centos or debian
+
+Conditional - When 
+
+EX:
+
+when: ansible_os_family == "Debian"
+
+and 
+
+or 
+
+EX:
+
+---
+- name: Install Sofware
+  host: all
+  vars:
+    packages:
+      - name: nginx
+        required: True
+      - name: mysql
+        required: True
+      - name: apache
+        required: False
+  tasks:
+  - name: Install "{{ item.name }} on Debian
+    apt:
+      name: "{{ item.name }}"
+      state: present
+      
+  loop: "{{ packages }}"
+  
+Conditionals & Register
+
+EX:
+
+---
+
+- name: Check the status of a service and email if it is down
+  hosts: localhost
+  tasks:
+    - command: service httpd status
+      register: result
+      
+    - mail:
+        to: admin@company.com
+        subject: Service Alert
+        body: Httpd Service is down
+        when: result.stout.find('down') !=-1
+        
+        
+        
+ANSIBLE LOOPS
+
+to pass in 2 values use and array of dictionaries
+
+EX: 
+-
+  name: Create users
+  hosts: localhost
+  tasks:
+    - user: name = '{{ item.name }}' state=present uid= '{{ item.uid }}'
+
+    loop:
+      - name: joe
+        uid: 1010
+      - name: george
+        uid: 1011
+        
+you can also use the with_* for loops
+
+with_* can be used with lookup plugins   
+
+
+EX:
+
+---
+- name: 'Install required packages'
+  hosts: localhost
+  become: yes
+  vars:
+    packages:
+      - httpd
+      - make
+      - vim
+  tasks:
+    - yum:
+        name: '{{ item }}'
+        state: present
+      with_items: '{{ packages }}'
+      
+      
+ANSIBLE ROLES
+
+make your work re-usable
+
+roles also help organize your tasks
+
+ansible_galaxy where you can find roles from other users
+
+ansible galaxy has a tool that can help you create a role
+
+ansible-galazy inint mysql 
+
+/etc/ansible/roles
+
+ansible-galaxy search mysql
+
+ansible-galazy install geoff.mysql
+
+ansible-galazy list
+
+ansible-config dump | grep ROLE     
+        
+
+
+
 
 
