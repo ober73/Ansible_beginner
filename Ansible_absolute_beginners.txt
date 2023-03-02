@@ -232,7 +232,93 @@ ansible-galazy install geoff.mysql
 
 ansible-galazy list
 
-ansible-config dump | grep ROLE     
+ansible-config dump | grep ROLE
+
+
+QUIZ 
+
+ansible.cfg
+
+[defaults]
+host_key_checking = false
+
+
+inventory
+
+node01 ansible_host=node01 ansible_ssh_pass=caleston123
+
+ansible -i inventory node01 -m ping -v
+
+
+alias
+
+
+
+groups
+
+[web_nodes]
+node01
+node02
+
+
+
+inventory_table
+
+#Web Servers
+web_node1 ansible_host=web01.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node2 ansible_host=web02.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+web_node3 ansible_host=web03.xyz.com ansible_connection=winrm ansible_user=administrator ansible_password=Win$Pass
+
+#DB Servers
+sql_db1 ansible_host=sql01.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+sql_db2 ansible_host=sql02.xyz.com ansible_connection=ssh ansible_user=root ansible_ssh_pass=Lin$Pass
+
+#Groups
+[db_nodes]
+sql_db1
+sql_db2
+
+[web_nodes]
+web_node1
+web_node2
+web_node3
+
+[boston_nodes]
+sql_db1
+web_node1
+
+[dallas_nodes]
+sql_db2
+web_node2
+web_node3
+
+[us_nodes:children]
+boston_nodes
+dallas_nodes
+
+
+---
+- hosts: node01
+  become: true
+  tasks:
+    - name: create a file
+      copy:
+        dest: /opt/file.txt
+        content: "This file is created by Ansible!"
+        
+        
+---
+- hosts: all
+  become: true
+  tasks:
+    - copy:
+        src:  /usr/src/blog/index.html
+        dest: /opt/blog
+        remote_src: yes
+        
+        
+        
+     
         
 
 
